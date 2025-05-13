@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.mumnanikunj.OTAExpoUpdate"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +38,20 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "03c66d73-4acb-4f87-9898-3f2fb4bee685"
+      },
+      "releaseChannel": "preview"
+    },
+    "owner": "mumnanikunj",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/03c66d73-4acb-4f87-9898-3f2fb4bee685"
     }
   }
 }

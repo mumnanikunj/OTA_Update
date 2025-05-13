@@ -1,45 +1,36 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import Constants from 'expo-constants';
+import * as Updates from 'expo-updates';
+import React, { useEffect } from 'react';
+import { Alert, Text, View } from 'react-native';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const checkForSimpleUpdate = async () =>{
+     try {
+    const update = await Updates.checkForUpdateAsync();
+    console.log('Update available:', update);
+    if (update.isAvailable) {
+      Alert.alert('Update available:', update.isAvailable && 'Yes');
+      await Updates.fetchUpdateAsync();
+      Alert.alert(
+        'Update Available',
+        'Restart the app to apply the new version.',
+        [{ text: 'Restart Now', onPress: () => Updates.reloadAsync() }]
+      );
+    }
+  } catch (error) {
+    console.warn('OTA update check failed:', error);
+  }
+  }
+
+  useEffect(()=>{
+    checkForSimpleUpdate()
+  },[])
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>
+       v{Constants.expoConfig?.version} - {Constants.expoConfig?.extra?.releaseChannel || 'default'}
+      </Text>
+    </View>
   );
 }
